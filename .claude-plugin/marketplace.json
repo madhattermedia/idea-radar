@@ -1,0 +1,14 @@
+{
+  "name": "mad-hatter",
+  "description": "Content tools from Mad Hatter Films & Media.",
+  "owner": {
+    "name": "Mad Hatter Films & Media"
+  },
+  "plugins": [
+    {
+      "name": "idea-radar",
+      "source": "./",
+      "description": "A personal idea radar: an interview that finds what you believe, and a scan that turns this week's news into content ideas with an angle and a hook."
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "name": "idea-radar",
+  "description": "A personal idea radar. Interviews you about what you believe, then scans the news in your field and fills a spreadsheet with content ideas, each with an angle and a hook that are yours.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Mad Hatter Films & Media",
+    "url": "https://madhatter-films.com"
+  }
+}
