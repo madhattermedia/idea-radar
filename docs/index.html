@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Idea Radar · Mad Hatter Films & Media</title>
+<meta name="description" content="A system for Claude that finds what your industry is talking about this week and hands you content ideas with an angle that is yours.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ffffff;--surface:#f7f6f3;--surface-2:#efede9;
+    --line:rgba(11,11,11,0.10);--line-strong:rgba(11,11,11,0.22);
+    --text:#0b0b0b;--muted:rgba(11,11,11,0.62);--faint:rgba(11,11,11,0.42);
+    --accent:#f95523;--accent-deep:#d43f10;--ink:#141414;
+    --display:"Playfair Display",Georgia,serif;
+    --body:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--text);font-family:var(--body);line-height:1.6;font-size:16px}
+  .wrap{max-width:780px;margin:0 auto;padding:0 20px}
+  a{color:var(--accent-deep)}
+
+  header{padding:clamp(40px,9vh,96px) 0 clamp(32px,6vh,56px)}
+  .brand{font-size:12.5px;letter-spacing:0.26em;text-transform:uppercase;color:var(--muted);font-weight:500}
+  .brand b{color:var(--text);font-weight:600}
+  h1{font-family:var(--display);font-weight:500;font-size:clamp(38px,7.4vw,62px);line-height:1.04;margin-top:16px;text-wrap:balance}
+  h1 em{font-style:italic;color:var(--accent)}
+  .lede{color:var(--muted);font-size:clamp(17px,2.3vw,19px);max-width:56ch;margin-top:18px}
+  .btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+  .btn{display:inline-block;padding:13px 20px;border-radius:8px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid var(--line-strong);color:var(--text);background:#fff}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn:hover{border-color:var(--accent)}
+  .btn.primary:hover{background:var(--accent-deep)}
+
+  section{padding:clamp(34px,6vh,56px) 0;border-top:1px solid var(--line)}
+  h2{font-family:var(--display);font-weight:500;font-size:clamp(26px,4.4vw,34px);line-height:1.15;text-wrap:balance}
+  h3{font-size:16px;font-weight:600;margin-top:22px}
+  section p{margin-top:12px;max-width:66ch}
+  section p.note{color:var(--muted);font-size:14.5px}
+  ul.plain{margin:12px 0 0 20px;max-width:64ch}
+  ul.plain li{margin-top:6px}
+
+  .steps{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:22px}
+  .step .n{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent-deep);font-weight:600}
+  .step .t{font-family:var(--display);font-size:22px;margin-top:6px;line-height:1.2}
+  .step p{font-size:15px;color:var(--muted);margin-top:8px}
+  .say{display:inline-block;margin-top:14px;font-size:14px;background:#fff;border:1px solid var(--line-strong);border-radius:999px;padding:6px 14px;font-weight:500}
+
+  .idea{margin-top:22px;border:1px solid var(--line-strong);border-left:3px solid var(--accent);border-radius:10px;overflow:hidden}
+  .idea .hook{font-family:var(--display);font-size:clamp(20px,3.2vw,25px);line-height:1.25;padding:22px 22px 18px}
+  .idea dl{display:grid;grid-template-columns:150px 1fr;border-top:1px solid var(--line)}
+  .idea dt,.idea dd{padding:11px 22px;border-top:1px solid var(--line);font-size:14.5px}
+  .idea dt{color:var(--faint);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;padding-top:14px}
+  .idea dl > :nth-child(-n+2){border-top:0}
+  .cap{font-size:13.5px;color:var(--faint);margin-top:10px}
+
+  .code{position:relative;margin-top:10px;background:var(--ink);color:#f3f1ec;border-radius:8px;padding:14px 84px 14px 16px;font-family:var(--mono);font-size:13.5px;line-height:1.5;overflow-x:auto;white-space:pre}
+  .code button{position:absolute;top:8px;right:8px;font:600 12px var(--body);color:#f3f1ec;background:rgba(255,255,255,0.12);border:0;border-radius:6px;padding:7px 11px;cursor:pointer}
+  .code button:hover{background:var(--accent)}
+  .route{margin-top:22px;border:1px solid var(--line);border-radius:10px;padding:22px}
+  .route .tag{font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent-deep);font-weight:600}
+  .route h3{margin-top:4px;font-family:var(--display);font-weight:500;font-size:21px}
+  .route ol{margin:10px 0 0 20px}
+  .route li{margin-top:10px}
+
+  table{width:100%;border-collapse:collapse;margin-top:18px;font-size:14.5px}
+  th,td{text-align:left;padding:10px 12px 10px 0;border-top:1px solid var(--line);vertical-align:top}
+  th{font-weight:600;white-space:nowrap;width:34%}
+  td{color:var(--muted)}
+
+  details{border-top:1px solid var(--line);padding:14px 0}
+  details:first-of-type{margin-top:18px}
+  summary{cursor:pointer;font-weight:600;list-style:none;display:flex;justify-content:space-between;gap:16px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";color:var(--accent);font-weight:500;font-size:20px;line-height:1}
+  details[open] summary::after{content:"\2212"}
+  details p{color:var(--muted);margin-top:8px}
+
+  .cta{background:var(--ink);color:#fff;border-radius:14px;padding:clamp(28px,5vw,44px);margin:clamp(34px,6vh,56px) 0}
+  .cta h2{color:#fff}
+  .cta p{color:rgba(255,255,255,0.72);margin-top:12px;max-width:54ch}
+  .cta .btn{margin-top:22px}
+
+  footer{padding:26px 0 48px;font-size:13px;color:var(--faint);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  footer a{color:var(--faint)}
+
+  @media(max-width:640px){
+    .steps{grid-template-columns:1fr}
+    .idea dl{grid-template-columns:1fr}
+    .idea dt{padding-bottom:0}
+    .idea dd{border-top:0;padding-top:4px}
+    .idea dl > :nth-child(2){border-top:0}
+    th{width:40%;white-space:normal}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand"><b>Mad Hatter</b> Films &amp; Media</div>
+  <h1>Idea Radar. <em>What to say</em> about what happened this week.</h1>
+  <p class="lede">A free system for Claude. It works out what you believe, watches the news in your field, and fills a spreadsheet with content ideas. Each one comes with an angle that is yours and a hook to open with.</p>
+  <div class="btns">
+    <a class="btn primary" href="#install">Install it</a>
+    <a class="btn" href="https://github.com/madhattermedia/idea-radar/releases/latest/download/idea-radar.zip">Download the zip</a>
+  </div>
+</header>
+
+<section>
+  <h2>The news is the same for everyone. Your take on it is the content.</h2>
+  <p>Most people who post regularly run out of things to say, or end up repeating the headline everyone else has already shared. The fix is not more ideas. It is a reason to post today, plus something only you would say about it.</p>
+  <p>This is a cut-down version of the idea radar we run twice a week for our clients. Theirs feeds a planning dashboard. Yours feeds a spreadsheet, which is all you need to start.</p>
+</section>
+
+<section>
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="n">Once · about ten minutes</div>
+      <div class="t">The interview</div>
+      <p>Claude asks about your field, who you want to reach and what you believe. If you are not sure what you believe yet, it helps you find out. Then it suggests three to six pillars to watch and saves your profile.</p>
+      <span class="say">"Set up my idea radar"</span>
+    </div>
+    <div class="step">
+      <div class="n">Whenever you want ideas</div>
+      <div class="t">The scan</div>
+      <p>Claude researches each pillar, opens and checks every story, and adds the best ones to your spreadsheet with an angle and a hook. A full scan takes a few minutes.</p>
+      <span class="say">"Run my radar"</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>What one idea looks like</h2>
+  <p>This row came out of a test scan for a coffee catering business whose owner believes hospitality comes down to how people are treated.</p>
+  <div class="idea">
+    <div class="hook">"People are not upset about a $5.17 coffee. They are upset about a $5.17 coffee from someone who did not look up."</div>
+    <dl>
+      <dt>The story</dt><dd>SBS News, 6 Nov 2026: what has happened to prices a month after Australia's card surcharge ban.</dd>
+      <dt>The angle</dt><dd>The coverage treats this as a price story. It is a service story. People pay without blinking when they are looked after, and resent the same price when it is slid across the counter in silence.</dd>
+      <dt>Belief</dt><dd>Hospitality comes down to being hospitable.</dd>
+      <dt>Text on screen</dt><dd>What a $5.17 coffee has to come with</dd>
+      <dt>Format</dt><dd>Talking to camera, LinkedIn and Instagram</dd>
+    </dl>
+  </div>
+  <p class="cap">Every row also has the link, a second hook and a line on why it is timely.</p>
+</section>
+
+<section id="install">
+  <h2>Install</h2>
+  <p>You need <b>Claude Code</b>: either in the terminal, or the Code tab of the Claude desktop app. Web search needs to be available. It is not built for the ordinary Claude chat window, because your profile and spreadsheet live in a folder on your computer.</p>
+
+  <div class="route">
+    <div class="tag">Recommended · you get updates</div>
+    <h3>As a plugin</h3>
+    <ol>
+      <li>In Claude Code, run this:
+        <div class="code">/plugin marketplace add madhattermedia/idea-radar<button>Copy</button></div></li>
+      <li>Then this:
+        <div class="code">/plugin install idea-radar@mad-hatter<button>Copy</button></div></li>
+      <li>Start a new session and say <b>"set up my idea radar"</b>.</li>
+    </ol>
+  </div>
+
+  <div class="route">
+    <div class="tag">No plugin system needed</div>
+    <h3>From the zip</h3>
+    <ol>
+      <li><a href="https://github.com/madhattermedia/idea-radar/releases/latest/download/idea-radar.zip">Download idea-radar.zip</a> and unzip it.</li>
+      <li>Open a terminal in the unzipped <b>idea-radar</b> folder and run:
+        <div class="code">mkdir -p ~/.claude/skills &amp;&amp; cp -R skills/radar-setup skills/radar-scan ~/.claude/skills/<button>Copy</button></div></li>
+      <li>Start a new Claude session and say <b>"set up my idea radar"</b>.</li>
+    </ol>
+  </div>
+  <p class="note">Not comfortable in a terminal? Open the unzipped folder in the Claude desktop app's Code tab and ask Claude to install the two skills for you.</p>
+</section>
+
+<section>
+  <h2>Using it</h2>
+  <table>
+    <tr><th>"Set up my idea radar"</th><td>Runs the interview and saves your profile.</td></tr>
+    <tr><th>"Run my radar"</th><td>Scans your pillars and adds new ideas to the sheet.</td></tr>
+    <tr><th>"Change my pillars"</th><td>Updates your profile. "Add a belief" works too.</td></tr>
+    <tr><th>"Write a script for row 3"</th><td>Not part of the radar, but Claude can read the sheet and draft from any row.</td></tr>
+  </table>
+  <h3>Where your files are</h3>
+  <p>Everything sits in a folder called <b>idea-radar</b> in your home folder. <b>profile.md</b> is your beliefs and pillars, and you can edit it by hand. <b>ideas.csv</b> is the spreadsheet. It opens in Excel, Numbers and Google Sheets.</p>
+  <h3>Getting good results</h3>
+  <ul class="plain">
+    <li><b>Give it something to read first.</b> Paste your website or a few old posts at the start of the interview. Correcting a draft is easier than answering from a blank page.</li>
+    <li><b>Disagree with it.</b> When it writes your beliefs back, sharpen the soft ones. A belief is useful when someone in your industry could argue with it.</li>
+    <li><b>Give it proof.</b> Two or three true facts about your business make the angles specific. It will never make one up, so without them it leaves [gaps in brackets] for you.</li>
+    <li><b>Use the Status and Notes columns.</b> They are yours. Scans only ever add rows.</li>
+    <li><b>Run it on a rhythm.</b> Twice a week suits most fields. If your Claude app supports scheduled tasks, ask it to "run my radar every Monday and Thursday at 7am".</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Questions</h2>
+  <details><summary>Does it cost anything?</summary><p>The radar is free. It runs inside your own Claude plan, so a scan uses some of your normal usage, roughly what a few minutes of research would.</p></details>
+  <details><summary>Will it make things up?</summary><p>It is built not to. Every story has to be opened and checked before it goes on the sheet, and a story it cannot open is left out. It does not invent statistics or facts about your business. You should still click the link before you post about anything.</p></details>
+  <details><summary>Where does my information go?</summary><p>Your profile and spreadsheet stay in a folder on your computer. Nothing is sent to us. The research itself runs through your Claude account like any other conversation.</p></details>
+  <details><summary>A scan came back with only a few ideas. Is it broken?</summary><p>Probably not. A quiet week in a pillar gets fewer ideas, because it will not pad the sheet. Some news sites also block automated reading. If the same belief keeps finding nothing, ask Claude to change your pillars.</p></details>
+  <details><summary>Does it write the scripts?</summary><p>No. It gives you the idea, the angle and the opening line. You can film from that, or hand a row back to Claude and ask for a draft.</p></details>
+  <details><summary>Can I change it?</summary><p>Yes. The whole thing is a few plain text files, and the source is on <a href="https://github.com/madhattermedia/idea-radar">GitHub</a>.</p></details>
+</section>
+
+<div class="cta">
+  <h2>Would you prefer someone took it from idea to finished video?</h2>
+  <p>That is what we do. We plan, film and edit content for founders and their teams, and an idea radar like this one is where our clients' videos start.</p>
+  <a class="btn primary" href="https://madhatter-films.com">Talk to Mad Hatter</a>
+</div>
+
+<footer>
+  <span>Made by Mad Hatter Films &amp; Media</span>
+  <a href="https://github.com/madhattermedia/idea-radar">Source on GitHub</a>
+</footer>
+
+</div>
+<script>
+document.querySelectorAll('.code button').forEach(function(b){
+  b.addEventListener('click',function(){
+    var text=b.parentNode.firstChild.textContent.trim();
+    navigator.clipboard.writeText(text).then(function(){
+      b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1500);
+    });
+  });
+});
+</script>
+</body>
+</html>
